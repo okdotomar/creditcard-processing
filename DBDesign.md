@@ -8,8 +8,7 @@ Tables:
 
 1. Merchant
 2. Bank
-3. MerchantBankAccount
-4. Transaction
+3. Transaction
 
 # 1. Merchant Table
 
