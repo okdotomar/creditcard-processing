@@ -1,0 +1,308 @@
+==================================================
+TRANSACTION LOG - 2026-04-12 17:56:52.995516
+Total transactions: 50
+==================================================
+
+Test Type: good_debit
+--------------------------------------------------
+Merchant Request: Smiths,TlAnbSU1,Mia Thompson,Jeffs Bank,debit,84101,$2.33,2026-04-12 17:56:52.994696
+Response: Approved.
+--------------------------------------------------
+
+Test Type: good_debit
+--------------------------------------------------
+Merchant Request: Walmart,260fZojB,Mia Thompson,Jeffs Bank,debit,84101,$2.97,2026-04-12 17:56:52.994749
+Response: Approved.
+--------------------------------------------------
+
+Test Type: good_debit
+--------------------------------------------------
+Merchant Request: Walmart,260fZojB,Isabella Martinez,Jeffs Bank,debit,84097,$1.44,2026-04-12 17:56:52.994756
+Response: Approved.
+--------------------------------------------------
+
+Test Type: good_debit
+--------------------------------------------------
+Merchant Request: Bear Paw Cafe,0PDOt87g,Isabella Martinez,Jeffs Bank,debit,84097,$2.53,2026-04-12 17:56:52.994759
+Response: Approved.
+--------------------------------------------------
+
+Test Type: good_debit
+--------------------------------------------------
+Merchant Request: Costco,DZXBV92s,Liam Carter,Jeffs Bank,debit,84770,$5.39,2026-04-12 17:56:52.994763
+Response: Approved.
+--------------------------------------------------
+
+Test Type: good_debit
+--------------------------------------------------
+Merchant Request: Costco,DZXBV92s,Liam Carter,Jeffs Bank,debit,84770,$6.68,2026-04-12 17:56:52.994765
+Response: Approved.
+--------------------------------------------------
+
+Test Type: good_debit
+--------------------------------------------------
+Merchant Request: Smiths,TlAnbSU1,Ava Jensen,Jeffs Bank,debit,84770,$6.83,2026-04-12 17:56:52.994768
+Response: Approved.
+--------------------------------------------------
+
+Test Type: good_debit
+--------------------------------------------------
+Merchant Request: Arctic Circle,OCmngQJ4,Ava Jensen,Jeffs Bank,debit,84770,$3.17,2026-04-12 17:56:52.994770
+Response: Approved.
+--------------------------------------------------
+
+Test Type: good_debit
+--------------------------------------------------
+Merchant Request: Costco,DZXBV92s,Benjamin Hill,Jeffs Bank,debit,84003,$4.04,2026-04-12 17:56:52.994775
+Response: Approved.
+--------------------------------------------------
+
+Test Type: good_debit
+--------------------------------------------------
+Merchant Request: Costco,DZXBV92s,Benjamin Hill,Jeffs Bank,debit,84003,$8.33,2026-04-12 17:56:52.994777
+Response: Approved.
+--------------------------------------------------
+
+Test Type: good_credit
+--------------------------------------------------
+Merchant Request: Smiths,TlAnbSU1,Liam Carter,Jeffs Bank,credit,84770,$9.55,2026-04-12 17:56:52.994781
+Response: Approved.
+--------------------------------------------------
+
+Test Type: good_credit
+--------------------------------------------------
+Merchant Request: Bear Paw Cafe,0PDOt87g,Mia Thompson,Jeffs Bank,credit,84101,$8.76,2026-04-12 17:56:52.994784
+Response: Approved.
+--------------------------------------------------
+
+Test Type: good_credit
+--------------------------------------------------
+Merchant Request: Costa Vida,AzFM4BXv,Isabella Martinez,Jeffs Bank,credit,84097,$2.85,2026-04-12 17:56:52.994787
+Response: Approved.
+--------------------------------------------------
+
+Test Type: bad_merchant_token
+--------------------------------------------------
+Merchant Request: Arctic Circle,BADTOKEN1,Sophia Patel,Jeffs Bank,debit,84660,$1.41,2026-04-12 17:56:52.994791
+Response: Merchant Not Authorized.
+--------------------------------------------------
+
+Test Type: bad_merchant_token
+--------------------------------------------------
+Merchant Request: Bear Paw Cafe,BADTOKEN1,Lucas Brown,Jeffs Bank,debit,84770,$3.78,2026-04-12 17:56:52.994794
+Response: Merchant Not Authorized.
+--------------------------------------------------
+
+Test Type: bad_merchant_token
+--------------------------------------------------
+Merchant Request: Walmart,BADTOKEN1,Jackson Wright,Jeffs Bank,debit,84321,$2.25,2026-04-12 17:56:52.994796
+Response: Merchant Not Authorized.
+--------------------------------------------------
+
+Test Type: bad_merchant_token
+--------------------------------------------------
+Merchant Request: Bear Paw Cafe,BADTOKEN1,Sophia Patel,Jeffs Bank,debit,84660,$7.87,2026-04-12 17:56:52.994799
+Response: Merchant Not Authorized.
+--------------------------------------------------
+
+Test Type: bad_merchant_token
+--------------------------------------------------
+Merchant Request: Costco,BADTOKEN1,Isabella Martinez,Jeffs Bank,debit,84097,$5.31,2026-04-12 17:56:52.994801
+Response: Merchant Not Authorized.
+--------------------------------------------------
+
+Test Type: insufficient_funds
+--------------------------------------------------
+Merchant Request: Costco,DZXBV92s,Noah Ramirez,Jeffs Bank,debit,84790,$500.00,2026-04-12 17:56:52.994805
+Response: Declined - Insufficient Funds.
+--------------------------------------------------
+
+Test Type: insufficient_funds
+--------------------------------------------------
+Merchant Request: Costco,DZXBV92s,Ethan Lee,Jeffs Bank,debit,84015,$500.00,2026-04-12 17:56:52.994807
+Response: Approved.
+--------------------------------------------------
+
+Test Type: insufficient_funds
+--------------------------------------------------
+Merchant Request: Arctic Circle,OCmngQJ4,Olivia Nguyen,Jeffs Bank,debit,84790,$500.00,2026-04-12 17:56:52.994809
+Response: Declined - Insufficient Funds.
+--------------------------------------------------
+
+Test Type: insufficient_funds
+--------------------------------------------------
+Merchant Request: Bear Paw Cafe,0PDOt87g,Lucas Brown,Jeffs Bank,debit,84770,$500.00,2026-04-12 17:56:52.994812
+Response: Approved.
+--------------------------------------------------
+
+Test Type: bad_cvv
+--------------------------------------------------
+Merchant Request: Walmart,260fZojB,Lucas Brown,Jeffs Bank,debit,84770,$6.28,2026-04-12 17:56:52.994815
+Response: Declined - Card Not Valid.
+--------------------------------------------------
+
+Test Type: bad_cvv
+--------------------------------------------------
+Merchant Request: Smiths,TlAnbSU1,Isabella Martinez,Jeffs Bank,debit,84097,$1.49,2026-04-12 17:56:52.994819
+Response: Declined - Card Not Valid.
+--------------------------------------------------
+
+Test Type: bad_cvv
+--------------------------------------------------
+Merchant Request: Costco,DZXBV92s,Liam Carter,Jeffs Bank,debit,84770,$3.88,2026-04-12 17:56:52.994822
+Response: Declined - Card Not Valid.
+--------------------------------------------------
+
+Test Type: bad_exp_date
+--------------------------------------------------
+Merchant Request: Walmart,260fZojB,Benjamin Hill,Jeffs Bank,debit,84003,$5.57,2026-04-12 17:56:52.994826
+Response: Declined - Card Not Valid.
+--------------------------------------------------
+
+Test Type: bad_exp_date
+--------------------------------------------------
+Merchant Request: Walmart,260fZojB,Olivia Nguyen,Jeffs Bank,debit,84790,$7.54,2026-04-12 17:56:52.994829
+Response: Declined - Card Not Valid.
+--------------------------------------------------
+
+Test Type: bad_exp_date
+--------------------------------------------------
+Merchant Request: Smiths,TlAnbSU1,Jackson Wright,Jeffs Bank,debit,84321,$2.71,2026-04-12 17:56:52.994833
+Response: Declined - Card Not Valid.
+--------------------------------------------------
+
+Test Type: bad_zip
+--------------------------------------------------
+Merchant Request: Smiths,TlAnbSU1,Sophia Patel,Jeffs Bank,debit,00000,$2.63,2026-04-12 17:56:52.994838
+Response: Declined - Card Not Valid.
+--------------------------------------------------
+
+Test Type: bad_zip
+--------------------------------------------------
+Merchant Request: Arctic Circle,OCmngQJ4,Mia Thompson,Jeffs Bank,debit,00000,$8.24,2026-04-12 17:56:52.994844
+Response: Declined - Card Not Valid.
+--------------------------------------------------
+
+Test Type: bad_zip
+--------------------------------------------------
+Merchant Request: Bear Paw Cafe,0PDOt87g,Lucas Brown,Jeffs Bank,debit,00000,$9.99,2026-04-12 17:56:52.994847
+Response: Declined - Card Not Valid.
+--------------------------------------------------
+
+Test Type: bad_account_number
+--------------------------------------------------
+Merchant Request: Bear Paw Cafe,0PDOt87g,Fake Person,Jeffs Bank,debit,00000,$1.56,2026-04-12 17:56:52.994850
+Response: Declined - Card Not Valid.
+--------------------------------------------------
+
+Test Type: bad_account_number
+--------------------------------------------------
+Merchant Request: Bear Paw Cafe,0PDOt87g,Fake Person,Jeffs Bank,debit,00000,$1.59,2026-04-12 17:56:52.994852
+Response: Declined - Card Not Valid.
+--------------------------------------------------
+
+Test Type: bad_account_number
+--------------------------------------------------
+Merchant Request: Walmart,260fZojB,Fake Person,Jeffs Bank,debit,00000,$8.85,2026-04-12 17:56:52.994855
+Response: Declined - Card Not Valid.
+--------------------------------------------------
+
+Test Type: unsupported_bank
+--------------------------------------------------
+Merchant Request: Walmart,260fZojB,Mia Thompson,Fake Bank,debit,84101,$4.4,2026-04-12 17:56:52.994858
+Response: Bank Not Supported.
+--------------------------------------------------
+
+Test Type: unsupported_bank
+--------------------------------------------------
+Merchant Request: Smiths,TlAnbSU1,Mia Thompson,Fake Bank,debit,84101,$3.77,2026-04-12 17:56:52.994861
+Response: Bank Not Supported.
+--------------------------------------------------
+
+Test Type: unsupported_bank
+--------------------------------------------------
+Merchant Request: Bear Paw Cafe,0PDOt87g,Lucas Brown,Fake Bank,debit,84770,$6.17,2026-04-12 17:56:52.994864
+Response: Bank Not Supported.
+--------------------------------------------------
+
+Test Type: good_debit_extra
+--------------------------------------------------
+Merchant Request: Smiths,TlAnbSU1,Ava Jensen,Jeffs Bank,debit,84770,$4.98,2026-04-12 17:56:52.994867
+Response: Approved.
+--------------------------------------------------
+
+Test Type: good_debit_extra
+--------------------------------------------------
+Merchant Request: Arctic Circle,OCmngQJ4,Isabella Martinez,Jeffs Bank,debit,84097,$4.39,2026-04-12 17:56:52.994872
+Response: Approved.
+--------------------------------------------------
+
+Test Type: good_debit_extra
+--------------------------------------------------
+Merchant Request: Costa Vida,AzFM4BXv,Mia Thompson,Jeffs Bank,debit,84101,$8.83,2026-04-12 17:56:52.994876
+Response: Approved.
+--------------------------------------------------
+
+Test Type: good_debit_extra
+--------------------------------------------------
+Merchant Request: Arctic Circle,OCmngQJ4,Liam Carter,Jeffs Bank,debit,84770,$4.24,2026-04-12 17:56:52.994879
+Response: Approved.
+--------------------------------------------------
+
+Test Type: good_debit_extra
+--------------------------------------------------
+Merchant Request: Bear Paw Cafe,0PDOt87g,Benjamin Hill,Jeffs Bank,debit,84003,$8.99,2026-04-12 17:56:52.994882
+Response: Approved.
+--------------------------------------------------
+
+Test Type: good_debit_extra
+--------------------------------------------------
+Merchant Request: Walmart,260fZojB,Ava Jensen,Jeffs Bank,debit,84770,$8.88,2026-04-12 17:56:52.994885
+Response: Approved.
+--------------------------------------------------
+
+Test Type: good_debit_extra
+--------------------------------------------------
+Merchant Request: Smiths,TlAnbSU1,Isabella Martinez,Jeffs Bank,debit,84097,$1.21,2026-04-12 17:56:52.994888
+Response: Approved.
+--------------------------------------------------
+
+Test Type: good_debit_extra
+--------------------------------------------------
+Merchant Request: Walmart,260fZojB,Mia Thompson,Jeffs Bank,debit,84101,$7.38,2026-04-12 17:56:52.994891
+Response: Approved.
+--------------------------------------------------
+
+Test Type: missing_cc_num
+--------------------------------------------------
+Merchant Request: Bear Paw Cafe,0PDOt87g,Benjamin Hill,Jeffs Bank,debit,84003,$5.00,2026-04-12 17:56:52.994894
+Response: Declined - Invalid Request.
+--------------------------------------------------
+
+Test Type: missing_amount
+--------------------------------------------------
+Merchant Request: Bear Paw Cafe,0PDOt87g,Benjamin Hill,Jeffs Bank,debit,84003,$unknown,2026-04-12 17:56:52.994895
+Response: Declined - Invalid Request.
+--------------------------------------------------
+
+Test Type: missing_customer_name
+--------------------------------------------------
+Merchant Request: Bear Paw Cafe,0PDOt87g,unknown,Jeffs Bank,debit,84003,$5.00,2026-04-12 17:56:52.994897
+Response: Declined - Invalid Request.
+--------------------------------------------------
+
+Test Type: missing_bank
+--------------------------------------------------
+Merchant Request: Bear Paw Cafe,0PDOt87g,Benjamin Hill,unknown,debit,84003,$5.00,2026-04-12 17:56:52.994899
+Response: Declined - Invalid Request.
+--------------------------------------------------
+
+Test Type: empty_payload
+--------------------------------------------------
+Merchant Request: unknown,unknown,unknown,unknown,unknown,unknown,$unknown,unknown
+Response: Declined - Invalid Request.
+--------------------------------------------------
+
+==================================================
+SIMULATION COMPLETE - 2026-04-12 17:59:31.356699
+==================================================
