@@ -1,0 +1,47 @@
+name: Deploy to Production
+
+on:
+  workflow_run:
+    workflows: ["Test Staging"]
+    types:
+      - completed
+
+jobs:
+  deploy-production:
+    runs-on: ubuntu-latest
+    if: ${{ github.event.workflow_run.conclusion == 'success' }}
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.11'
+
+      - name: Install dependencies
+        run: pip install boto3
+
+      - name: Promote staging version to production (default stage)
+        env:
+          AWS_ACCESS_KEY_ID:     ${{ secrets.AWS_ACCESS_KEY_ID }}
+          AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          AWS_REGION:            us-east-1
+        run: |
+          # Get the version currently running in staging
+          STAGING_VERSION=$(aws lambda get-alias \
+            --function-name processCard \
+            --name staging \
+            --region $AWS_REGION \
+            --query 'FunctionVersion' --output text)
+          echo "Promoting staging version $STAGING_VERSION to production"
+
+          # Update the production alias to point to the same version
+          aws lambda update-alias \
+            --function-name processCard \
+            --name production \
+            --function-version $STAGING_VERSION \
+            --region $AWS_REGION
+
+          echo "Production successfully updated to version $STAGING_VERSION"

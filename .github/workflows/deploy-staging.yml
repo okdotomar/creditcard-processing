@@ -1,0 +1,62 @@
+name: Deploy to Staging
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  deploy-staging:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.11'
+
+      - name: Install dependencies
+        run: pip install boto3
+
+      - name: Deploy Lambda to Staging
+        env:
+          AWS_ACCESS_KEY_ID:     ${{ secrets.AWS_ACCESS_KEY_ID }}
+          AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          AWS_REGION:            us-east-1
+        run: |
+          zip -r lambda.zip lambda_function.py
+          aws lambda update-function-code \
+            --function-name processCard \
+            --zip-file fileb://lambda.zip \
+            --region $AWS_REGION
+
+      - name: Wait for Lambda update to complete
+        env:
+          AWS_ACCESS_KEY_ID:     ${{ secrets.AWS_ACCESS_KEY_ID }}
+          AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          AWS_REGION:            us-east-1
+        run: |
+          aws lambda wait function-updated \
+            --function-name processCard \
+            --region $AWS_REGION
+
+      - name: Publish new Lambda version and update staging alias
+        env:
+          AWS_ACCESS_KEY_ID:     ${{ secrets.AWS_ACCESS_KEY_ID }}
+          AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          AWS_REGION:            us-east-1
+        run: |
+          VERSION=$(aws lambda publish-version \
+            --function-name processCard \
+            --region $AWS_REGION \
+            --query 'Version' --output text)
+          echo "Published version: $VERSION"
+
+          aws lambda update-alias \
+            --function-name processCard \
+            --name staging \
+            --function-version $VERSION \
+            --region $AWS_REGION
