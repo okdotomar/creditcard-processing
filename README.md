@@ -24,11 +24,59 @@ Merchant POS  →  API Gateway  →  Lambda (processCard)  →  Bank API
 ## Features
 
 - **Multi-bank routing** — integrates with 6 banks, each with a different API contract (field names, auth styles, transaction type enums)
-- **Merchant authentication** — name + token verification against a DynamoDB table before any transaction is forwarded
+- **Merchant authentication** — name + token verification against DynamoDB before any transaction is forwarded
 - **Response normalization** — maps each bank's varied response formats into a unified set of outcomes
 - **Transaction logging** — every request is written to DynamoDB with only the last 4 digits of the card number (PCI-aligned)
 - **Input validation** — rejects malformed or incomplete payloads before they reach any bank
+- **Reporting** — Excel report generator that reads DynamoDB exports and produces summary + pie charts
 - **CI/CD pipeline** — automated staging deploy and test gate on every push; production only receives a version that passed all staging tests
+
+---
+
+## Project Structure
+
+```
+.
+├── lambda_function.py            # Main Lambda handler — routing, auth, logging
+├── merchant_simulator.py         # Simulates transactions for manual testing
+├── merchant_simulator_500.py     # Sends 500+ transactions across 5 banks and 50 merchants
+├── build_report.py               # Generates an Excel report from a DynamoDB CSV export
+├── spam-cchs.py                  # Continuously sends transactions to multiple endpoints (bulk testing)
+├── bio.py                        # Developer bio
+│
+├── tests/
+│   ├── staging_tests.py          # Automated CI test suite — runs against the staging endpoint
+│   ├── testBanks.py              # Integration tests for verifying each bank API
+│   ├── test_7asuite.py           # Test suite 7A
+│   └── test_7bsuite.py           # Test suite 7B
+│
+├── debug/
+│   ├── debugBanks.py             # Calls each bank directly to inspect raw responses
+│   ├── debug_corbin.py           # Corbin Bank-specific debug helper
+│   └── debug_jankbank.py         # JankBank-specific debug helper
+│
+├── csv/
+│   ├── merchants.csv             # Registered merchants (name + token)
+│   ├── jeffs_bank_accounts.csv   # Jeff's Bank test accounts
+│   ├── tophers_bank_accounts.csv # Topher's Bank test accounts
+│   ├── calibear_bank_accounts.csv
+│   ├── corbin_bank_accounts.csv
+│   ├── joseph_bank_accounts.csv
+│   ├── jankbank_bank_accounts.csv
+│   ├── barrett_bank_accounts.csv
+│   └── deanna_bank_accounts.csv
+│
+├── charts/
+│   ├── BurndownChart.pdf         # Sprint burndown chart
+│   └── Diagrams.pdf              # System architecture diagrams
+│
+├── DBDesign.md                   # DynamoDB schema design notes
+├── requirements.md               # Original project requirements document
+└── .github/workflows/
+    ├── deploy-staging.yml        # Deploys Lambda on push to main
+    ├── test-staging.yml          # Runs staging_tests.py against the staging alias
+    └── deploy-production.yml     # Promotes staging → production if tests pass
+```
 
 ---
 
@@ -70,57 +118,71 @@ Merchant POS  →  API Gateway  →  Lambda (processCard)  →  Bank API
 
 ### Responses
 
-| Response                          | Meaning                                      |
-|-----------------------------------|----------------------------------------------|
-| `Approved.`                       | Transaction accepted by the bank             |
-| `Declined - Insufficient Funds.`  | Account balance or credit limit too low      |
-| `Declined - Credit Limit Exceeded.` | Over the card's credit line               |
-| `Declined - Daily Limit Exceeded.` | Daily transaction cap hit                   |
-| `Declined - Account Frozen.`      | Account is frozen                            |
-| `Declined - Account Closed.`      | Account is closed                            |
-| `Declined - Card Not Valid.`      | Card number not recognized                   |
-| `Declined - Invalid Request.`     | Missing or malformed required fields         |
-| `Merchant Not Authorized.`        | Merchant name/token failed authentication    |
-| `Bank Not Supported.`             | Unknown bank name in request                 |
+| Response                            | Meaning                                      |
+|-------------------------------------|----------------------------------------------|
+| `Approved.`                         | Transaction accepted by the bank             |
+| `Declined - Insufficient Funds.`    | Account balance or credit limit too low      |
+| `Declined - Credit Limit Exceeded.` | Over the card's credit line                  |
+| `Declined - Daily Limit Exceeded.`  | Daily transaction cap hit                    |
+| `Declined - Account Frozen.`        | Account is frozen                            |
+| `Declined - Account Closed.`        | Account is closed                            |
+| `Declined - Card Not Valid.`        | Card number not recognized                   |
+| `Declined - Invalid Request.`       | Missing or malformed required fields         |
+| `Merchant Not Authorized.`          | Merchant name/token failed authentication    |
+| `Bank Not Supported.`               | Unknown bank name in request                 |
 
 ---
 
 ## Supported Banks
 
-| Bank Name                  | Auth Style | Accepted Aliases                                    |
-|----------------------------|------------|-----------------------------------------------------|
-| Jeff's Bank                | Body token | `jeffs bank`, `jeff's bank`                        |
-| Topher's Bank              | Body token | `tophers bank`, `topher's bank`                    |
-| Wild West Bank             | Body token | `wild west bank`, `wild west`                      |
-| CaliBear Credit Union      | API key header | `calibear`, `calibear bank`, `calibear credit union` |
-| Corbin Bank                | Basic auth header | `corbin bank`, `corbin`                      |
-| Joseph's Bank              | Body token | `josephs bank`, `joseph's bank`, `jank bank`       |
+| Bank Name             | Auth Style         | Accepted Aliases                                     |
+|-----------------------|--------------------|------------------------------------------------------|
+| Jeff's Bank           | Body token         | `jeffs bank`, `jeff's bank`                         |
+| Topher's Bank         | Body token         | `tophers bank`, `topher's bank`                     |
+| Wild West Bank        | Body token         | `wild west bank`, `wild west`                       |
+| CaliBear Credit Union | API key header     | `calibear`, `calibear bank`, `calibear credit union` |
+| Corbin Bank           | Basic auth header  | `corbin bank`, `corbin`                             |
+| Joseph's Bank         | Body token         | `josephs bank`, `joseph's bank`, `jank bank`        |
 
-Each bank integration handles differences in field naming conventions, authentication placement (request body vs. HTTP headers), amount types (string vs. number), and transaction type enums (`debit/credit`, `withdrawal/deposit`, `withdrawal bool`).
+Each integration handles differences in field naming conventions, auth placement (body vs. headers), amount types (string vs. number), and transaction type enums.
 
 ---
 
-## Project Structure
+## Running the Simulators
 
+### Quick test — small batch
+```bash
+python3 merchant_simulator.py
 ```
-.
-├── lambda_function.py          # Main Lambda handler — routing, auth, logging
-├── merchant_simulator.py       # Manual transaction simulator for local testing
-├── staging_tests.py            # Automated test suite run by CI against the staging endpoint
-├── testBanks.py                # Integration tests for bank API verification
-├── debugBanks.py               # Debug helper for inspecting individual bank responses
-├── test_7asuite.py             # Test suite 7A
-├── test_7bsuite.py             # Test suite 7B
-├── bio.py                      # Developer bio script
-├── *_bank_accounts*.csv        # Simulated account data used by test scripts
-├── transaction_log.txt         # Local output from merchant_simulator.py
-├── DBDesign.md                 # DynamoDB schema design notes
-├── requirements.md             # Original project requirements document
-└── .github/workflows/
-    ├── deploy-staging.yml      # Deploys Lambda on push to main
-    ├── test-staging.yml        # Runs staging_tests.py against the staging alias
-    └── deploy-production.yml   # Promotes staging → production if tests pass
+Sends a variety of test transactions (good cards, bad CVVs, insufficient funds, etc.) and writes results to `transaction_log.txt`.
+
+### Large-scale test — 500+ transactions
+```bash
+python3 merchant_simulator_500.py
 ```
+Fires 510 randomized transactions across 5 banks and 50 real merchants. Prints live results and shows a per-bank breakdown when complete.
+
+### Bulk endpoint tester
+```bash
+# from the csv/ directory (reads *_bank_accounts.csv and merchants.csv)
+cd csv
+python3 ../spam-cchs.py
+```
+Continuously cycles through all endpoints in `urls.txt`, sending one transaction per endpoint per pass. Logs everything to `bank_endpoint_log.txt`.
+
+---
+
+## Generating the Transaction Report
+
+1. Export the `Transaction` DynamoDB table to CSV and name it `results.csv` inside `csv/`.
+2. Run from the project root:
+```bash
+python3 build_report.py
+```
+Produces `transaction_report.xlsx` with three sheets:
+- **Summary** — total transactions, largest/average amount, approval/decline rates
+- **Merchants** — transaction count per merchant + pie chart
+- **Banks** — transaction count per bank + pie chart
 
 ---
 
@@ -129,7 +191,7 @@ Each bank integration handles differences in field naming conventions, authentic
 ```
 push to main
     └─► Deploy to Staging (GitHub Actions)
-            └─► Run staging_tests.py against /staging endpoint
+            └─► Run tests/staging_tests.py against /staging endpoint
                     ├─► All tests pass  →  Promote staging alias to production
                     └─► Any test fails  →  Block production deploy, exit 1
 ```
@@ -151,14 +213,15 @@ Full PK/SK layout and attribute schema: [DBDesign.md](DBDesign.md)
 
 ## Tech Stack
 
-| Layer       | Technology                                 |
-|-------------|--------------------------------------------|
-| Runtime     | Python 3.11 on AWS Lambda                  |
-| API         | AWS API Gateway (REST)                     |
-| Database    | AWS DynamoDB                               |
-| HTTP client | `urllib3` (built into Lambda runtime)      |
-| CI/CD       | GitHub Actions                             |
-| IaC         | AWS CLI (alias promotion via workflow)     |
+| Layer       | Technology                                   |
+|-------------|----------------------------------------------|
+| Runtime     | Python 3.11 on AWS Lambda                    |
+| API         | AWS API Gateway (REST)                       |
+| Database    | AWS DynamoDB                                 |
+| HTTP client | `urllib3` (built into Lambda runtime)        |
+| Reporting   | `openpyxl` (Excel report generation)         |
+| CI/CD       | GitHub Actions                               |
+| IaC         | AWS CLI (alias promotion via workflow)       |
 
 ---
 
@@ -166,4 +229,4 @@ Full PK/SK layout and attribute schema: [DBDesign.md](DBDesign.md)
 
 - Full card numbers are never stored — only the last 4 digits are written to the transaction log
 - Merchant tokens are verified against DynamoDB on every request before any bank is contacted
-- Bank credentials (tokens, API keys) are stored in the Lambda environment, not in source code at runtime
+- Bank credentials (tokens, API keys) live in Lambda environment config, not in source code
